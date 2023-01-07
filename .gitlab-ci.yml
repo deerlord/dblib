@@ -21,17 +21,19 @@ before_script:
   - virtualenv venv
   - source venv/bin/activate
   - pip install poetry
-  - poetry install --extras sqlite --extras postgres
+  - poetry install --all-extras
 
 test:
   script:
     - flake8 dblib
     - mypy dblib
-    - radon cc --xml dblib
-    - radon mi --xml dblib
+    - radon cc --xml dblib > radon_cc.xml
+    - radon mi --xml dblib > radon_mi.xml
   artifacts:
     paths:
       - coverage.xml
+      - radon_cc.xml
+      - radon_mi.xml
 
 build:
   script:
