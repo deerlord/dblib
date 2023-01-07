@@ -1,24 +1,9 @@
 from datetime import datetime
-from typing import TypeAlias
 
-from pydantic import BaseModel
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field
 
-TABLE_ID: TypeAlias = int | None
-
-
-class GPS(BaseModel):
-    latitude: float
-    longitude: float
-
-
-class UpdateLocation(BaseModel):
-    dev_name: str
-    sensor_name: str
-
-
-class Table(SQLModel):
-    id: TABLE_ID = Field(default=None, primary_key=True)
+from ..types import TABLE_ID
+from ._base import Table
 
 
 class Sensor(Table, table=True):
@@ -33,5 +18,5 @@ class Device(Table, table=True):
 
 class Location(Table, table=True):
     time: datetime
-    dev_name: str | None = Field(default=None, foreign_key="device.name")
-    sensor_name: str | None = Field(default=None, foreign_key="sensor.name")
+    device_id: TABLE_ID = Field(default=None, foreign_key="device.id")
+    sensor_id: TABLE_ID = Field(default=None, foreign_key="sensor.id")

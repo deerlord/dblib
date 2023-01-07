@@ -3,7 +3,6 @@ from typing import AsyncGenerator, TypeAlias, TypeVar
 
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from sqlmodel.sql.expression import Select, SelectOfScalar
 
 from .settings import Settings
 
@@ -14,8 +13,6 @@ elif settings.database_protocol == "postgres":
     from asyncpg.exceptions import PostgresError as DBError  # type: ignore
 
 T = TypeVar("T")
-
-__all__ = ["engine", "connection"]
 
 SESSION: TypeAlias = AsyncSession
 
