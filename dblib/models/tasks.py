@@ -5,7 +5,7 @@ from sqlmodel import Field, SQLModel
 from ..enums import tasks
 from ..types import TABLE_ID
 from ._base import Table
-from .general import Item  # noqa: F401
+from .inventory import Item  # noqa: F401
 
 
 class ToDo(Table, table=True):
