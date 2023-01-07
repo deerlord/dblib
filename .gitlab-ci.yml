@@ -27,8 +27,8 @@ test:
   script:
     - flake8 dblib
     - mypy dblib
-    - radon cc --xml dblib > radon_cc.xml
-    - radon mi --xml dblib > radon_mi.xml
+    - radon cc --json -O radon_cc.json --show-complexity --total-average dblib/
+    - radon mi --json -O radon_mi.json --show dblib/
   artifacts:
     paths:
       - coverage.xml
