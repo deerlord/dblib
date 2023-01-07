@@ -50,6 +50,6 @@ async def connection() -> AsyncGenerator[SESSION, None]:
 
 
 async def init_database():
-    engine = engine()
-    async with engine.begin() as conn:
+    local = engine()
+    async with local.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)

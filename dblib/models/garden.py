@@ -9,3 +9,11 @@ class Planted(Table, table=True):
     item_id: TABLE_ID = Field(foreign_key="item.id")
     date: datetime
     location: str
+    count: str
+
+
+class Harvested(Table, table=True):
+    item_id: TABLE_ID = Field(foreign_key="item.id")
+    date: datetime
+    location: str
+    count: str
