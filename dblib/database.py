@@ -49,7 +49,7 @@ async def connection() -> AsyncGenerator[SESSION, None]:
             await local.rollback()
 
 
-async def init_database():
+async def create_tables():
     local = engine()
     async with local.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)

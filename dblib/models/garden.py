@@ -7,13 +7,13 @@ from .inventory import Item  # noqa: F401
 
 class Planted(Table, table=True):
     item_id: TABLE_ID = Field(foreign_key="item.id")
-    date: datetime
+    datetime: datetime
     location: str
     count: str
 
 
 class Harvested(Table, table=True):
     item_id: TABLE_ID = Field(foreign_key="item.id")
-    date: datetime
+    datetime: datetime
     location: str
     count: str
