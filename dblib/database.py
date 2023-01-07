@@ -3,6 +3,7 @@ from typing import AsyncGenerator, TypeAlias, TypeVar
 
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
+from sqlmodel import SQLModel
 
 from .settings import Settings
 
@@ -46,3 +47,9 @@ async def connection() -> AsyncGenerator[SESSION, None]:
 
 
 session = sessionmaker(engine(), expire_on_commit=False, class_=SESSION)
+
+
+async def init_database():
+    engine = engine()
+    async with engine.begin() as conn:
+        await conn.run_sync(SQLModel.metadata.create_all)
