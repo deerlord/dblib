@@ -5,7 +5,7 @@ from sqlmodel import Field
 from .. import types
 from ..enums import imperial
 from ._base import Table
-from .general import Item
+from .general import Item  # noqa: F401
 
 
 class Container(Table, table=True):

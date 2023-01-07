@@ -11,7 +11,7 @@ settings = Settings()
 if settings.database_protocol == "sqlite":
     from sqlite3 import IntegrityError as DBError
 elif settings.database_protocol == "postgres":
-    from asyncpg.exceptions import PostgresError as DBError
+    from asyncpg.exceptions import PostgresError as DBError  # type: ignore
 
 T = TypeVar("T")
 
@@ -46,13 +46,6 @@ async def connection() -> AsyncGenerator[SESSION, None]:
             await local.commit()
         except DBError:
             await local.rollback()
-
-
-async def execute(statement: Select[T] | SelectOfScalar[T]) -> AsyncGenerator[T, None]:
-    async with connection() as conn:
-        result = await conn.execute(statement)
-        for row in result.fetchall():
-            yield row
 
 
 session = sessionmaker(engine(), expire_on_commit=False, class_=SESSION)
