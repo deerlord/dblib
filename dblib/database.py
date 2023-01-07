@@ -36,6 +36,9 @@ def engine() -> AsyncEngine:
     return create_async_engine(string)
 
 
+session = sessionmaker(engine(), expire_on_commit=False, class_=SESSION)
+
+
 @asynccontextmanager
 async def connection() -> AsyncGenerator[SESSION, None]:
     async with session() as local:
@@ -44,9 +47,6 @@ async def connection() -> AsyncGenerator[SESSION, None]:
             await local.commit()
         except DBError:
             await local.rollback()
-
-
-session = sessionmaker(engine(), expire_on_commit=False, class_=SESSION)
 
 
 async def init_database():
