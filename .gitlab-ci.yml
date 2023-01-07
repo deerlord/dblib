@@ -32,8 +32,8 @@ test:
   artifacts:
     paths:
       - coverage.xml
-      - radon_cc.xml
-      - radon_mi.xml
+      - radon_cc.json
+      - radon_mi.json
 
 build:
   script:
