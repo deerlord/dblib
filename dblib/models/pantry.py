@@ -5,10 +5,7 @@ from sqlmodel import Field
 from .. import types
 from ..enums import imperial
 from ._base import Table
-
-
-class Item(Table, table=True):
-    name: str
+from .general import Item
 
 
 class Container(Table, table=True):

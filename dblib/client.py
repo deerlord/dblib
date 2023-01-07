@@ -3,6 +3,7 @@ from typing import AsyncGenerator, TypeAlias, TypeVar
 
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
+from sqlmodel.sql.expression import Select, SelectOfScalar
 
 from .settings import Settings
 
@@ -10,9 +11,10 @@ settings = Settings()
 if settings.database_protocol == "sqlite":
     from sqlite3 import IntegrityError as DBError
 elif settings.database_protocol == "postgres":
-    from asyncpg.exceptions import PostgresError as DBError  # type: ignore
+    from asyncpg.exceptions import PostgresError as DBError
 
 T = TypeVar("T")
+
 __all__ = ["engine", "connection"]
 
 SESSION: TypeAlias = AsyncSession
@@ -44,6 +46,13 @@ async def connection() -> AsyncGenerator[SESSION, None]:
             await local.commit()
         except DBError:
             await local.rollback()
+
+
+async def execute(statement: Select[T] | SelectOfScalar[T]) -> AsyncGenerator[T, None]:
+    async with connection() as conn:
+        result = await conn.execute(statement)
+        for row in result.fetchall():
+            yield row
 
 
 session = sessionmaker(engine(), expire_on_commit=False, class_=SESSION)
