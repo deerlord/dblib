@@ -5,6 +5,10 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engin
 from sqlalchemy.orm import sessionmaker
 
 from .settings import Settings
+from typing import TypeVar
+from sqlmodel.sql.expression import Select
+
+T = TypeVar("T")
 
 settings = Settings()
 if settings.database_protocol == "sqlite":
@@ -43,5 +47,15 @@ async def connection() -> AsyncGenerator[SESSION, None]:
         try:
             yield local
             await local.commit()
+            await local.close()
         except DBError:
             await local.rollback()
+
+
+async def get_all(statement: Select[T]) -> list[T]:
+    retval = []
+    async with connection() as db:
+        results = await db.execute(statement)
+        for result in results.fetchall():
+            retval.append(result)
+    return retval

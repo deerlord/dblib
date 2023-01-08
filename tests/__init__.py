@@ -8,5 +8,9 @@ def setup():
     filename = "./data.sqlite"
     if os.path.exists(filename):
         os.remove(filename)
-    yield
-    os.remove(filename)
+    try:
+        yield
+    except:
+        ...
+    finally:
+        os.remove(filename)
