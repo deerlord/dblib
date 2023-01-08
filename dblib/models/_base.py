@@ -1,3 +1,4 @@
+from sqlalchemy.orm import declared_attr
 from sqlmodel import Field, SQLModel
 
 from ..types import TABLE_ID
@@ -6,8 +7,8 @@ from ..types import TABLE_ID
 class Table(SQLModel):
     id: TABLE_ID | None = Field(default=None, primary_key=True)
 
-    @property
-    def __tablename__(self) -> str:
-        *_, module = self.__module__.split(".")
-        name = self.__class__.__name__.lower()
-        return f"{module}_{name}"
+    @declared_attr  # type: ignore
+    def __tablename__(cls) -> str:
+        *_, module = cls.__module__.split(".")
+        name = cls.__name__.lower()
+        return f"{module.lower()}_{name.lower()}"

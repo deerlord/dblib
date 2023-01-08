@@ -11,12 +11,12 @@ class Item(Table, table=True):
 
 
 class Acquired(Table, table=True):
-    item_id: TABLE_ID = Field(foreign_key="item.id")
+    item_id: TABLE_ID = Field(foreign_key=f"{Item.__tablename__}.id")
     date: datetime
     location: str
 
 
 class Liquidated(Table, table=True):
-    item_id: TABLE_ID = Field(foreign_key="item.id")
+    item_id: TABLE_ID = Field(foreign_key=f"{Item.__tablename__}.id")
     date: datetime
     location: str

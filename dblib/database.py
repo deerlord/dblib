@@ -3,7 +3,6 @@ from typing import AsyncGenerator, TypeAlias, TypeVar
 
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from sqlmodel import SQLModel
 
 from .settings import Settings
 
@@ -47,9 +46,3 @@ async def connection() -> AsyncGenerator[SESSION, None]:
             await local.commit()
         except DBError:
             await local.rollback()
-
-
-async def create_tables():
-    local = engine()
-    async with local.begin() as conn:
-        await conn.run_sync(SQLModel.metadata.create_all)

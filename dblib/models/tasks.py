@@ -5,7 +5,7 @@ from sqlmodel import Field, SQLModel
 from ..enums import tasks
 from ..types import TABLE_ID
 from ._base import Table
-from .inventory import Item  # noqa: F401
+from .inventory import Item
 
 
 class ToDo(Table, table=True):
@@ -14,9 +14,15 @@ class ToDo(Table, table=True):
     due_by: datetime | None = None
     completed: datetime | None = None
     category: tasks.Category = Field(default=tasks.Category.general)
-    item_id: TABLE_ID | None = Field(default=None, foreign_key="item.id")
+    item_id: TABLE_ID | None = Field(
+        default=None, foreign_key=f"{Item.__tablename__}.id"
+    )
 
 
 class Block(SQLModel, table=True):
-    blocker_id: TABLE_ID = Field(primary_key=True, foreign_key="todo.id")
-    blocked_id: TABLE_ID = Field(primary_key=True, foreign_key="todo.id")
+    blocker_id: TABLE_ID = Field(
+        primary_key=True, foreign_key=f"{ToDo.__tablename__}.id"
+    )
+    blocked_id: TABLE_ID = Field(
+        primary_key=True, foreign_key=f"{ToDo.__tablename__}.id"
+    )

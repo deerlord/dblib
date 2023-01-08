@@ -10,6 +10,3 @@ class Settings(BaseSettings):
     database_password: Optional[str] = Field(env="DBLIB_PASSWORD", default=None)
     database_hostname: Optional[str] = Field(env="DBLIB_HOSTNAME", default=None)
     database_port: Optional[PositiveInt] = Field(env="DBLIB_PORT", default=None)
-
-    class Config:
-        env_file = "/secrets/.dblib"

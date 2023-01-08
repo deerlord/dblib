@@ -27,6 +27,7 @@ test:
   script:
     - flake8 dblib
     - mypy dblib
+    - pytest --cov=dblib --cov-report xml tests
     - radon cc --json -O radon_cc.json --show-complexity --total-average dblib/
     - radon mi --json -O radon_mi.json --show dblib/
   artifacts:
