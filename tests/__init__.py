@@ -12,5 +12,4 @@ def setup():
         yield
     except:
         ...
-    finally:
-        os.remove(filename)
+    os.remove(filename)

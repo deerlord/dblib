@@ -42,7 +42,7 @@ async def test_selects(setup):
         await db.refresh(model1)
         await db.refresh(model2)
     statement = select(ModelOne, ModelTwo).where(ModelOne.id == ModelTwo.id)
-    results = await database.get_all(statement)
+    results = [row async for row in database.get_all(statement)]
     assert len(results) == 1
     assert isinstance(results[0][0], ModelOne)
     assert isinstance(results[0][1], ModelTwo)

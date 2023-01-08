@@ -46,7 +46,6 @@ async def connection() -> AsyncGenerator[SESSION, None]:
         try:
             yield local
             await local.commit()
-            await local.close()
         except DBError:
             await local.rollback()
 
