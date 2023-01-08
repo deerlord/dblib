@@ -1,12 +1,11 @@
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator, TypeAlias
+from typing import AsyncGenerator, TypeAlias, TypeVar
 
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
+from sqlmodel.sql.expression import Select
 
 from .settings import Settings
-from typing import TypeVar
-from sqlmodel.sql.expression import Select
 
 T = TypeVar("T")
 
@@ -52,10 +51,8 @@ async def connection() -> AsyncGenerator[SESSION, None]:
             await local.rollback()
 
 
-async def get_all(statement: Select[T]) -> list[T]:
-    retval = []
+async def get_all(statement: Select[T]) -> AsyncGenerator[T, None]:  # type: ignore
     async with connection() as db:
         results = await db.execute(statement)
         for result in results.fetchall():
-            retval.append(result)
-    return retval
+            yield result  # type: ignore
