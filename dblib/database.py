@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator, TypeAlias, TypeVar
+from typing import AsyncGenerator, TypeAlias
 
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
@@ -12,7 +12,6 @@ if settings.database_protocol == "sqlite":
 elif settings.database_protocol == "postgres":
     from asyncpg.exceptions import PostgresError as DBError  # type: ignore
 
-T = TypeVar("T")
 
 SESSION: TypeAlias = AsyncSession
 
