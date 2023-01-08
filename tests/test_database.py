@@ -12,6 +12,7 @@ async def test_database(setup):
         ...
 
     model = TestModel()
+    assert model.id is None
 
     await _create_tables()
     async with database.connection() as db:

@@ -1,7 +1,5 @@
 from dblib.models._base import Table
 
-from . import setup
-
 
 def test_tablename():
     class TestModel(Table):
