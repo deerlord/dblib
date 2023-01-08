@@ -5,12 +5,7 @@ from sqlmodel import Field
 from ..types import TABLE_ID
 from ._base import Table
 from .bluetooth import Device
-
-
-class Sensor(Table, table=True):
-    name: str
-    latitude: float
-    longitude: float
+from .sensors import Sensor
 
 
 class Location(Table, table=True):

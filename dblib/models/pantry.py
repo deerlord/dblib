@@ -32,3 +32,4 @@ class OpenedGood(Table, table=True):
     )
     opened: datetime
     percent: float = 100.0
+    emptied: datetime | None = None

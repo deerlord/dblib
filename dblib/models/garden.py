@@ -4,7 +4,7 @@ from sqlmodel import Field
 
 from ..types import TABLE_ID
 from ._base import Table
-from .inventory import Item  # noqa: F401
+from .inventory import Item
 
 
 class Planted(Table, table=True):
