@@ -1,6 +1,6 @@
 import pytest
 
-from dblib import _create_tables, database
+from dblib import database
 from dblib.models._base import Table
 from sqlmodel import select
 
@@ -15,7 +15,7 @@ async def test_database(setup):
     model = TestModel()
     assert model.id is None
 
-    await _create_tables()
+    await database._create_tables()
     async with database.connection() as db:
         db.add(model)
         await db.commit()
@@ -32,7 +32,7 @@ async def test_selects(setup):
     class ModelTwo(Table, table=True):
         ...
 
-    await _create_tables()
+    await database._create_tables()
     model1 = ModelOne()
     model2 = ModelTwo()
     async with database.connection() as db:

@@ -1,8 +1,10 @@
+import asyncio
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator, TypeAlias, TypeVar
 
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
+from sqlmodel import SQLModel
 from sqlmodel.sql.expression import Select
 
 from .settings import Settings
@@ -55,3 +57,13 @@ async def get_all(statement: Select[T]) -> AsyncGenerator[T, None]:  # type: ign
         results = await db.execute(statement)
         for result in results.fetchall():
             yield result  # type: ignore
+
+
+def create_tables():
+    asyncio.run(_create_tables())
+
+
+async def _create_tables():
+    local = engine()
+    async with local.begin() as conn:
+        await conn.run_sync(SQLModel.metadata.create_all)
