@@ -55,9 +55,3 @@ def test_creation(setup):
     db_file = "tests/data.sqlite.empty"
     source_file = "data.sqlite"
     assert filecmp.cmp(db_file, source_file)
-    
-
-def test_data_models():
-    models = database.data_models()
-    print("MODELS", models)
-    assert False
