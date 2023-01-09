@@ -5,7 +5,7 @@ import pytest
 
 @pytest.fixture
 def setup():
-    filename = "./data.sqlite"
+    filename = "data.sqlite"
     if os.path.exists(filename):
         os.remove(filename)
     try:
