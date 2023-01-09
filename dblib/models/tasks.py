@@ -3,8 +3,7 @@ from datetime import datetime
 from sqlmodel import Field, SQLModel
 
 from ..enums import tasks
-from ..types import TABLE_ID
-from ._base import Table
+from ._base import TABLE_ID, Table
 from .inventory import Item
 
 

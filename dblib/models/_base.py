@@ -1,7 +1,9 @@
+from typing import TypeAlias
+
 from sqlalchemy.orm import declared_attr
 from sqlmodel import Field, SQLModel
 
-from ..types import TABLE_ID
+TABLE_ID: TypeAlias = int
 
 
 class Table(SQLModel):

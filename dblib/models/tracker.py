@@ -2,8 +2,7 @@ from datetime import datetime
 
 from sqlmodel import Field
 
-from ..types import TABLE_ID
-from ._base import Table
+from ._base import TABLE_ID, Table
 from .bluetooth import Device
 from .sensors import Sensor
 

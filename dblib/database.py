@@ -1,12 +1,16 @@
 import asyncio
+import importlib
+import os
+import pkgutil
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator, TypeAlias, TypeVar
+from typing import AsyncGenerator, Type, TypeAlias, TypeVar
 
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 from sqlmodel.sql.expression import Select
 
+from . import models
 from .settings import Settings
 
 T = TypeVar("T")
@@ -67,3 +71,22 @@ async def _create_tables():
     local = engine()
     async with local.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
+
+
+def data_models() -> dict[str, list[Type[SQLModel]]]:
+    retval = {}
+    pkgpath = os.path.dirname(models.__file__)
+    for _, name, _ in pkgutil.iter_modules([pkgpath]):
+        if not name.startswith("_"):
+            module = importlib.import_module(f"dblib.models.{name}")
+            trimmed = (
+                getattr(module, model)
+                for model in dir(module)
+                if not model.startswith("_")
+            )
+            data = filter(
+                lambda m: m.__module__ == module.__name__,
+                filter(lambda m: hasattr(m, "__table__"), trimmed),
+            )
+            retval[name] = list(data)
+    return retval

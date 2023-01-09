@@ -2,9 +2,8 @@ from datetime import datetime
 
 from sqlmodel import Field
 
-from .. import types
 from ..enums import imperial
-from ._base import Table
+from ._base import TABLE_ID, Table
 from .inventory import Item
 
 
@@ -15,10 +14,10 @@ class Container(Table, table=True):
 
 
 class StockedGood(Table, table=True):
-    ingredient_id: types.TABLE_ID = Field(
+    ingredient_id: TABLE_ID = Field(
         default=None, foreign_key=f"{Item.__tablename__}.id"
     )
-    container_id: types.TABLE_ID = Field(
+    container_id: TABLE_ID = Field(
         default=None, foreign_key=f"{Container.__tablename__}.id"
     )
     packed: datetime
@@ -27,7 +26,7 @@ class StockedGood(Table, table=True):
 
 
 class OpenedGood(Table, table=True):
-    stockedgood_id: types.TABLE_ID = Field(
+    stockedgood_id: TABLE_ID = Field(
         default=None, foreign_key=f"{StockedGood.__tablename__}.id"
     )
     opened: datetime
