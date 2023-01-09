@@ -3,7 +3,7 @@ import importlib
 import os
 import pkgutil
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator, Type, TypeAlias, TypeVar
+from typing import AsyncGenerator, Generator, Type, TypeAlias, TypeVar
 
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
@@ -73,20 +73,28 @@ async def _create_tables():
         await conn.run_sync(SQLModel.metadata.create_all)
 
 
-def data_models() -> dict[str, list[Type[SQLModel]]]:
-    retval = {}
+def data_models(name: str | None = None) -> dict[str, list[Type[SQLModel]]]:
     pkgpath = os.path.dirname(models.__file__)
-    for _, name, _ in pkgutil.iter_modules([pkgpath]):
-        if not name.startswith("_"):
-            module = importlib.import_module(f"dblib.models.{name}")
-            trimmed = (
-                getattr(module, model)
-                for model in dir(module)
-                if not model.startswith("_")
-            )
-            data = filter(
-                lambda m: m.__module__ == module.__name__,
-                filter(lambda m: hasattr(m, "__table__"), trimmed),
-            )
-            retval[name] = list(data)
+    packages = (
+        package
+        for _, package, _ in pkgutil.iter_modules([pkgpath])
+        if not package.startswith("_")
+        if not name or package == name
+    )
+    retval = {package: list(_get_models(package)) for package in packages}
     return retval
+
+
+def _get_models(package: str) -> Generator[Type[SQLModel], None, None]:
+    module = importlib.import_module(f"dblib.models.{package}")
+    classes = (
+        getattr(module, model) for model in dir(module) if not model.startswith("_")
+    )
+    gen = (
+        model
+        for model in classes
+        if hasattr(model, "__table__")
+        if model.__module__ == module.__name__
+    )
+    for model in gen:
+        yield model
