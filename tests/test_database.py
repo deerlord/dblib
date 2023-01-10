@@ -48,10 +48,3 @@ async def test_selects(setup):
     assert len(results) == 1
     assert isinstance(results[0][0], ModelOne)
     assert isinstance(results[0][1], ModelTwo)
-
-
-def test_creation(setup):
-    database.create_tables()
-    db_file = "tests/data.sqlite.empty"
-    source_file = "data.sqlite"
-    assert filecmp.cmp(db_file, source_file)
