@@ -13,4 +13,4 @@ class Table(SQLModel):
     def __tablename__(cls) -> str:
         *_, module = cls.__module__.split(".")
         name = cls.__name__.lower()
-        return f"{module.lower()}_{name.lower()}"
+        return f"{module.lower()}_{name}"
