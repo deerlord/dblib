@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlmodel import Field, Relationship
+from sqlmodel import Field
 
 from ..enums import inventory
 from ._base import TABLE_ID, Table

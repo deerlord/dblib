@@ -7,7 +7,7 @@ from typing import AsyncGenerator, Generator, Type, TypeAlias, TypeVar
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel, select
-from sqlmodel.sql.expression import Select, SelectOfScalar
+from sqlmodel.sql.expression import SelectOfScalar
 
 from . import models
 from .settings import Settings
@@ -64,7 +64,7 @@ async def get_all(statement: SelectOfScalar[S]) -> AsyncGenerator[S, None]:  # t
 
 
 async def get_relationship(parent: SQLModel, foreign: Type[S]) -> S | None:
-    key = f"{foreign.__name__}_id"
+    key = f"{foreign.__name__.lower()}_id"
     retval = None
     fk_id = getattr(parent, key, None)
     if fk_id is None:
