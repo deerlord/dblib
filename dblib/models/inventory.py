@@ -8,7 +8,7 @@ from ._base import TABLE_ID, Table
 
 class Item(Table, table=True):
     name: str
-    type: inventory.ItemType
+    type: inventory.ItemType = Field(index=True)
 
 
 class Acquired(Table, table=True):
