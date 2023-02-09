@@ -13,13 +13,11 @@ class Item(Table, table=True):
 
 class Acquired(Table, table=True):
     item_id: TABLE_ID = Field(foreign_key=f"{Item.__tablename__}.id")
-    item: Item = Relationship()
     date: datetime
     location: str
 
 
 class Liquidated(Table, table=True):
     item_id: TABLE_ID = Field(foreign_key=f"{Item.__tablename__}.id")
-    item: Item = Relationship()
     date: datetime
     location: str

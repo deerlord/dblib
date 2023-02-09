@@ -18,7 +18,6 @@ class StockedGood(Table, table=True):
         default=None, foreign_key=f"{Item.__tablename__}.id"
     )
 
-    ingredient: Item = Relationship()
     container_id: TABLE_ID = Field(
         default=None, foreign_key=f"{Container.__tablename__}.id"
     )

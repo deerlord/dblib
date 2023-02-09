@@ -16,7 +16,6 @@ class Action(Table, table=True):
     item_id: TABLE_ID | None = Field(
         default=None, foreign_key=f"{Item.__tablename__}.id"
     )
-    item: Item | None = Relationship()
 
 
 class Block(Table, table=True):

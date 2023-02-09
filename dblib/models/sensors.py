@@ -7,6 +7,4 @@ from .location import GPSCoords
 
 class Sensor(Table, table=True):
     item_id: TABLE_ID = Field(foreign_key=f"{Item.__tablename__}.id")
-    item: Item = Relationship()
     coords_id: TABLE_ID = Field(foreign_key=f"{GPSCoords.__tablename__}.id")
-    coords: GPSCoords = Relationship()

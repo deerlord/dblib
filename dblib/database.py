@@ -1,4 +1,3 @@
-import asyncio
 import importlib
 import os
 import pkgutil
@@ -7,13 +6,14 @@ from typing import AsyncGenerator, Generator, Type, TypeAlias, TypeVar
 
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from sqlmodel import SQLModel
-from sqlmodel.sql.expression import Select
+from sqlmodel import SQLModel, select
+from sqlmodel.sql.expression import Select, SelectOfScalar
 
 from . import models
 from .settings import Settings
 
 T = TypeVar("T")
+S = TypeVar("S", bound=SQLModel)
 
 settings = Settings()
 if settings.database_protocol == "sqlite":
@@ -56,21 +56,24 @@ async def connection() -> AsyncGenerator[SESSION, None]:
             await local.rollback()
 
 
-async def get_all(statement: Select[T]) -> AsyncGenerator[T, None]:  # type: ignore
+async def get_all(statement: SelectOfScalar[S]) -> AsyncGenerator[S, None]:  # type: ignore
     async with connection() as db:
         results = await db.execute(statement)
         for result in results.fetchall():
             yield result  # type: ignore
 
 
-def create_tables():
-    asyncio.run(_create_tables())
-
-
-async def _create_tables():
-    local = engine()
-    async with local.begin() as conn:
-        await conn.run_sync(SQLModel.metadata.create_all)
+async def get_relationship(parent: SQLModel, foreign: Type[S]) -> S | None:
+    key = f"{foreign.__name__}_id"
+    retval = None
+    fk_id = getattr(parent, key, None)
+    if fk_id is None:
+        return retval
+    statement = select(foreign).where(foreign.id == fk_id)
+    async for result in get_all(statement):
+        retval = result
+        break
+    return retval
 
 
 def data_models(name: str | None = None) -> dict[str, list[Type[SQLModel]]]:
