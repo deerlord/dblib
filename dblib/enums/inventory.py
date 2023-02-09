@@ -6,3 +6,4 @@ class ItemType(str, Enum):
     ingredient = "ingredient"
     plant = "plant"
     equipment = "equipment"
+    device = "device"
