@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlmodel import Field
+from sqlmodel import Field, Relationship
 
 from ..enums import imperial
 from ._base import TABLE_ID, Table
@@ -17,6 +17,8 @@ class StockedGood(Table, table=True):
     ingredient_id: TABLE_ID = Field(
         default=None, foreign_key=f"{Item.__tablename__}.id"
     )
+
+    ingredient: Item = Relationship()
     container_id: TABLE_ID = Field(
         default=None, foreign_key=f"{Container.__tablename__}.id"
     )

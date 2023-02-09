@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship
 
 from ..enums import tasks
 from ._base import TABLE_ID, Table
@@ -16,6 +16,7 @@ class Action(Table, table=True):
     item_id: TABLE_ID | None = Field(
         default=None, foreign_key=f"{Item.__tablename__}.id"
     )
+    item: Item | None = Relationship()
 
 
 class Block(Table, table=True):

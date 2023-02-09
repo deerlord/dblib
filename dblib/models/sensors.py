@@ -1,4 +1,4 @@
-from sqlmodel import Field
+from sqlmodel import Field, Relationship
 
 from ._base import TABLE_ID, Table
 from .inventory import Item
@@ -6,6 +6,7 @@ from .location import GPSCoords
 
 
 class Sensor(Table, table=True):
-    item_id: TABLE_ID = Field(default=None, foreign_key=f"{Item.__tablename__}.id")
-    coords: TABLE_ID = Field(foreign_key=f"{GPSCoords.__tablename__}.id")
-    state: bool
+    item_id: TABLE_ID = Field(foreign_key=f"{Item.__tablename__}.id")
+    item: Item = Relationship()
+    coords_id: TABLE_ID = Field(foreign_key=f"{GPSCoords.__tablename__}.id")
+    coords: GPSCoords = Relationship()
