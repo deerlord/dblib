@@ -7,5 +7,5 @@ from .location import GPSCoords
 
 class Sensor(Table, table=True):
     item_id: TABLE_ID = Field(default=None, foreign_key=f"{Item.__tablename__}.id")
-    coords: TABLE_ID = Field(foreign_key=f"{GPSCoords.__tablename__.id}")
+    coords: TABLE_ID = Field(foreign_key=f"{GPSCoords.__tablename__}.id")
     state: bool

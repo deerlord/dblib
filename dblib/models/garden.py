@@ -8,12 +8,12 @@ from .location import GPSCoords
 
 
 class RaisedBed(Table, table=True):
-    coords: GPSCoords
+    coords_id: TABLE_ID = Field(foreign_key=f"{GPSCoords.__tablename__}.id")
 
 
 class Plant(Table, table=True):
     item_id: TABLE_ID = Field(foreign_key=f"{Item.__tablename__}.id")
-    raisedbed_id: TABLE_ID | None = Field(default=None, foreign_key=f"{RaisedBed.__tablename__.id}")
+    raisedbed_id: TABLE_ID | None = Field(default=None, foreign_key=f"{RaisedBed.__tablename__}.id")
     germinated: datetime | None = None
     planted: datetime | None = None
     harvested: datetime | None = None
