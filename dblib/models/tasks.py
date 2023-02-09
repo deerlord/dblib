@@ -18,7 +18,7 @@ class Action(Table, table=True):
     )
 
 
-class Block(SQLModel, table=True):
+class Block(Table, table=True):
     blocker_id: TABLE_ID = Field(
         primary_key=True, foreign_key=f"{Action.__tablename__}.id"
     )
