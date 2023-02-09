@@ -1,20 +1,26 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from sqlmodel import Field
 
 from ._base import TABLE_ID, Table
 from .inventory import Item
+from .location import GPSCoords
 
 
-class Planted(Table, table=True):
+class RaisedBed(Table, table=True):
+    coords: GPSCoords
+
+
+class Plant(Table, table=True):
     item_id: TABLE_ID = Field(foreign_key=f"{Item.__tablename__}.id")
-    datetime: datetime
-    location: str
-    count: str
+    raisedbed_id: TABLE_ID | None = Field(default=None, foreign_key=f"{RaisedBed.__tablename__.id}")
+    germinated: datetime | None = None
+    planted: datetime | None = None
+    harvested: datetime | None = None
 
 
-class Harvested(Table, table=True):
-    item_id: TABLE_ID = Field(foreign_key=f"{Item.__tablename__}.id")
-    datetime: datetime
-    location: str
-    count: str
+class ScheduleData(Table, table=True):
+    name: str
+    germinated: timedelta
+    planted: timedelta
+    harvested: timedelta

@@ -32,7 +32,3 @@ def data_models() -> dict[str, list[Type[SQLModel]]]:
     for package in find_packages():
         data = {package.__name__: list(find_data_models(package))}
     return data
-
-
-if __name__ == "__main__":
-    print(data_models())
