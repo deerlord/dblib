@@ -156,7 +156,7 @@ def upgrade() -> None:
         ("gpscoords", gpscoords)
     )
     for name, model in data:
-        filename = f"./csv_data/{name}.csv"
+        filename = f"./migrations/data/{name}.csv"
         gen = _csv_data(filename)
         op.bulk_insert(model, list(gen))
 
