@@ -13,10 +13,10 @@ async def main():
     for package_name, models in database.data_models().items():
         dirpath = f"{topdir}/{package_name}"
         for model in models:
-            await _insert(dirpath, model)
+            await _load(dirpath, model)
 
 
-async def _insert(dirpath: str, model: Type[SQLModel]):
+async def _load(dirpath: str, model: Type[SQLModel]):
     filename = f"{dirpath}/{model.__name__}.csv"
     with open(filename, "r") as handle:
         reader = csv.DictReader(handle)

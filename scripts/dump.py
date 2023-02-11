@@ -15,10 +15,10 @@ async def main():
         dirpath = f"{topdir}/{package_name}"
         os.makedirs(dirpath)
         for model in models:
-            await _save(dirpath, model)
+            await _dump(dirpath, model)
 
 
-async def _save(dirpath: str, model: Type[SQLModel]):
+async def _dump(dirpath: str, model: Type[SQLModel]):
     filename = f"{dirpath}/{model.__name__}.csv"
     async with database.connection() as conn:
         statement = select(model)
