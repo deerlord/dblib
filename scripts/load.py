@@ -1,5 +1,6 @@
 import asyncio
 import csv
+import sys
 from typing import Type
 
 from sqlmodel import SQLModel
@@ -8,8 +9,9 @@ from dblib import database
 
 
 async def main():
+    topdir = sys.argv[1]
     for package_name, models in database.data_models().items():
-        dirpath = f"csv_data/{package_name}"
+        dirpath = f"{topdir}/{package_name}"
         for model in models:
             await _insert(dirpath, model)
 
