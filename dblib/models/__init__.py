@@ -1,9 +1,9 @@
 from . import (  # noqa: F401
     compost,
     garden,
+    inventory,
     location,
     mqtt,
-    inventory,
     pantry,
     sensors,
     tasks,

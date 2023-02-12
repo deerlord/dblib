@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlmodel import Field
+from sqlmodel import Field, Relationship
 
 from ..enums import tasks
 from ._base import TABLE_ID, Table
@@ -16,12 +16,21 @@ class Action(Table, table=True):
     item_id: TABLE_ID | None = Field(
         default=None, foreign_key=f"{Item.__tablename__}.id"
     )
+    item: Item = Relationship(  # noqa: F821
+        sa_relationship_kwargs={"lazy": "selectin"},
+    )
 
 
 class Block(Table, table=True):
     blocker_id: TABLE_ID = Field(
         primary_key=True, foreign_key=f"{Action.__tablename__}.id"
     )
+    blocker: Action = Relationship(  # noqa: F821
+        sa_relationship_kwargs={"lazy": "selectin"},
+    )
     blocked_id: TABLE_ID = Field(
         primary_key=True, foreign_key=f"{Action.__tablename__}.id"
+    )
+    blocked: Action = Relationship(  # noqa: F821
+        sa_relationship_kwargs={"lazy": "selectin"},
     )

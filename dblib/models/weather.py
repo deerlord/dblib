@@ -1,11 +1,20 @@
 from datetime import datetime
-from ._base import Table, TABLE_ID
-from sqlmodel import Field
+
+from sqlalchemy import UniqueConstraint
+from sqlmodel import Field, Relationship
+
+from ._base import TABLE_ID, Table
 from .location import GPSCoords
 
 
 class Forecast(Table, table=True):
-    gpscoords_id: TABLE_ID = Field(default=1, foreign_key=f"{GPSCoords.__tablename__}.id")
+    __table_args__ = (UniqueConstraint("gpscoords_id", "start_time", "end_time"),)
+    gpscoords_id: TABLE_ID = Field(
+        default=1, foreign_key=f"{GPSCoords.__tablename__}.id"
+    )
+    gpscoords: GPSCoords = Relationship(  # noqa: F821
+        sa_relationship_kwargs={"lazy": "selectin"},
+    )
     start_time: datetime
     end_time: datetime
     is_daytime: bool
