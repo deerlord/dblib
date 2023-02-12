@@ -1,10 +1,11 @@
 from datetime import datetime
-from ._base import Table
+from ._base import Table, TABLE_ID
+from sqlmodel import Field
+from .location import GPSCoords
 
 
 class Forecast(Table, table=True):
-    latitude: float
-    longitude: float
+    gpscoords_id: TABLE_ID = Field(default=1, foreign_key=f"{GPSCoords.__tablename__}.id")
     start_time: datetime
     end_time: datetime
     is_daytime: bool
