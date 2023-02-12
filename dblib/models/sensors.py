@@ -14,6 +14,6 @@ class Sensor(Table, table=True):
 
 class Data(Table, table=True):
     timestamp: datetime
-    uuid: UUID.UUID
-    measurement: str
+    uuid: UUID = Field(index=True)
+    measurement: str = Field(index=True)
     value: float
