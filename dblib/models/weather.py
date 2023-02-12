@@ -8,9 +8,9 @@ class Forecast(Table, table=True):
     isDaytime: bool
     temperature: int
     temperatureUnit: str
-    probabilityOfPrecipitation: float
-    dewpoint: float
-    relativeHumidity: float
+    probabilityOfPrecipitation: float | None = None
+    dewpoint: float | None = None
+    relativeHumidity: float | None = None
     windspeed: str
     windDirection: str
     icon: str
