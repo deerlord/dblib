@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from sqlmodel import Field, Relationship
+from sqlmodel import Field
 
 from ._base import TABLE_ID, Table
 from .inventory import Item

@@ -6,4 +6,5 @@ from . import (  # noqa: F401
     sensors,
     tasks,
     tracker,
+    weather,
 )
