@@ -3,16 +3,18 @@ from ._base import Table
 
 
 class Forecast(Table, table=True):
-    startTime: datetime
-    endTime: datetime
-    isDaytime: bool
+    latitude: float
+    longitude: float
+    start_time: datetime
+    end_time: datetime
+    is_daytime: bool
     temperature: int
-    temperatureUnit: str
-    probabilityOfPrecipitation: float | None = None
+    temperature_unit: str
+    probability_of_precipitation: float | None = None
     dewpoint: float | None = None
-    relativeHumidity: float | None = None
+    relative_humidity: float | None = None
     windspeed: str
-    windDirection: str
+    wind_direction: str
     icon: str
-    shortForecast: str
-    detailedForecast: str
+    short_forecast: str
+    detailed_forecast: str
