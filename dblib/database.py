@@ -11,15 +11,13 @@ from sqlmodel.sql.expression import SelectOfScalar
 
 from . import models
 from .settings import Settings
+from sqlalchemy.exc import IntegrityError
 
 T = TypeVar("T")
 S = TypeVar("S", bound=SQLModel)
 
 settings = Settings()
-if settings.database_protocol == "sqlite":
-    from sqlite3 import IntegrityError as DBError
-elif settings.database_protocol == "postgres":
-    from asyncpg.exceptions import PostgresError as DBError  # type: ignore
+
 
 
 SESSION: TypeAlias = AsyncSession
@@ -52,7 +50,7 @@ async def connection() -> AsyncGenerator[SESSION, None]:
         try:
             yield local
             await local.commit()
-        except DBError:
+        except IntegrityError:
             await local.rollback()
 
 

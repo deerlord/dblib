@@ -33,22 +33,22 @@ class Crop(Table, table=True):
     count: int = 0
 
     germinated_id: TABLE_ID | None = Field(
-        default=1, foreign_key=f"{Stage.__tablename__}.id"
+        foreign_key=f"{Stage.__tablename__}.id"
     )
     germinated: Stage = Relationship(  # noqa: F821
-        sa_relationship_kwargs={"lazy": "selectin"},
+        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": 'Crop.germinated_id'},
     )
     planted_id: TABLE_ID | None = Field(
-        default=1, foreign_key=f"{Stage.__tablename__}.id"
+        foreign_key=f"{Stage.__tablename__}.id"
     )
     planted: Stage = Relationship(  # noqa: F821
-        sa_relationship_kwargs={"lazy": "selectin"},
+        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": 'Crop.planted_id'},
     )
     harvested_id: TABLE_ID | None = Field(
-        default=1, foreign_key=f"{Stage.__tablename__}.id"
+        foreign_key=f"{Stage.__tablename__}.id"
     )
     harvested: Stage = Relationship(  # noqa: F821
-        sa_relationship_kwargs={"lazy": "selectin"},
+        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": 'Crop.harvested_id'},
     )
 
 
