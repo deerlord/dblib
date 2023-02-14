@@ -16,7 +16,12 @@ class RaisedBed(Table, table=True):
     )
 
 
-class Plant(Table, table=True):
+class Stage(Table, table=True):
+    count: int
+    at: datetime
+
+
+class Crop(Table, table=True):
     item_id: TABLE_ID = Field(foreign_key=f"{Item.__tablename__}.id")
     item: Item = Relationship(  # noqa: F821
         sa_relationship_kwargs={"lazy": "selectin"},
@@ -25,9 +30,26 @@ class Plant(Table, table=True):
     raisedbed: RaisedBed = Relationship(  # noqa: F821
         sa_relationship_kwargs={"lazy": "selectin"},
     )
-    germinated: datetime | None = None
-    planted: datetime | None = None
-    harvested: datetime | None = None
+    count: int = 0
+
+    germinated_id: TABLE_ID | None = Field(
+        default=1, foreign_key=f"{Stage.__tablename__}.id"
+    )
+    germinated: Stage = Relationship(  # noqa: F821
+        sa_relationship_kwargs={"lazy": "selectin"},
+    )
+    planted_id: TABLE_ID | None = Field(
+        default=1, foreign_key=f"{Stage.__tablename__}.id"
+    )
+    planted: Stage = Relationship(  # noqa: F821
+        sa_relationship_kwargs={"lazy": "selectin"},
+    )
+    harvested_id: TABLE_ID | None = Field(
+        default=1, foreign_key=f"{Stage.__tablename__}.id"
+    )
+    harvested: Stage = Relationship(  # noqa: F821
+        sa_relationship_kwargs={"lazy": "selectin"},
+    )
 
 
 class ScheduleData(Table, table=True):

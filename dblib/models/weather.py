@@ -23,7 +23,7 @@ class Forecast(Table, table=True):
     probability_of_precipitation: float | None = None
     dewpoint: float | None = None
     relative_humidity: float | None = None
-    windspeed: str
+    wind_speed: str | None = None
     wind_direction: str
     icon: str
     short_forecast: str
