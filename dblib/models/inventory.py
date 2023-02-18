@@ -6,24 +6,24 @@ from ..enums import inventory
 from ._base import TABLE_ID, Table
 
 
-class Item(Table, table=True):
+class Data(Table, table=True):
     name: str
+
+
+class Item(Table, table=True):
+    data_id: TABLE_ID = Field(foreign_key=f"{Data.__tablename__}.id")
+    data: Data = Relationship(  # noqa: F821
+        sa_relationship_kwargs={"lazy": "selectin"},
+    )
     type: inventory.ItemType = Field(index=True)
+    expires: datetime | None = None
 
 
-class Acquired(Table, table=True):
+class Change(Table, table=True):
     item_id: TABLE_ID = Field(foreign_key=f"{Item.__tablename__}.id")
     item: Item = Relationship(  # noqa: F821
         sa_relationship_kwargs={"lazy": "selectin"},
     )
     date: datetime
     location: str
-
-
-class Liquidated(Table, table=True):
-    item_id: TABLE_ID = Field(foreign_key=f"{Item.__tablename__}.id")
-    item: Item = Relationship(  # noqa: F821
-        sa_relationship_kwargs={"lazy": "selectin"},
-    )
-    date: datetime
-    location: str
+    action: inventory.Action
