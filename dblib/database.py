@@ -4,6 +4,7 @@ import pkgutil
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator, Generator, Type, TypeAlias, TypeVar
 
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel, select
@@ -11,13 +12,10 @@ from sqlmodel.sql.expression import SelectOfScalar
 
 from . import models
 from .settings import Settings
-from sqlalchemy.exc import IntegrityError
 
-T = TypeVar("T")
 S = TypeVar("S", bound=SQLModel)
 
 settings = Settings()
-
 
 
 SESSION: TypeAlias = AsyncSession

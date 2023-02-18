@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 from sqlmodel import Field, Relationship
 
+from ..enums import garden
 from ._base import TABLE_ID, Table
 from .inventory import Data
 from .location import GPSCoords
@@ -16,11 +17,6 @@ class RaisedBed(Table, table=True):
     )
 
 
-class Stage(Table, table=True):
-    count: int
-    at: datetime
-
-
 class Crop(Table, table=True):
     data_id: TABLE_ID = Field(foreign_key=f"{Data.__tablename__}.id")
     data: Data = Relationship(  # noqa: F821
@@ -32,24 +28,15 @@ class Crop(Table, table=True):
     )
     count: int = 0
 
-    germinated_id: TABLE_ID | None = Field(
-        foreign_key=f"{Stage.__tablename__}.id"
+
+class Action(Table, table=True):
+    crop_id: TABLE_ID = Field(foreign_key=f"{Crop.__tablename__}.id")
+    crop: Crop = Relationship(  # noqa: F821
+        sa_relationship_kwargs={"lazy": "selectin"},
     )
-    germinated: Stage = Relationship(  # noqa: F821
-        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": 'Crop.germinated_id'},
-    )
-    planted_id: TABLE_ID | None = Field(
-        foreign_key=f"{Stage.__tablename__}.id"
-    )
-    planted: Stage = Relationship(  # noqa: F821
-        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": 'Crop.planted_id'},
-    )
-    harvested_id: TABLE_ID | None = Field(
-        foreign_key=f"{Stage.__tablename__}.id"
-    )
-    harvested: Stage = Relationship(  # noqa: F821
-        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": 'Crop.harvested_id'},
-    )
+    count: int
+    at: datetime
+    stage: garden.Stage
 
 
 class ScheduleData(Table, table=True):

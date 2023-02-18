@@ -1,8 +1,8 @@
 """create
 
-Revision ID: c60ea865c7f5
+Revision ID: 3a9bb1be8455
 Revises: 
-Create Date: 2023-02-18 13:40:42.879025
+Create Date: 2023-02-18 13:52:11.554055
 
 """
 import csv
@@ -13,7 +13,7 @@ import sqlmodel
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "c60ea865c7f5"
+revision = "3a9bb1be8455"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -49,16 +49,6 @@ def upgrade() -> None:
     op.create_index(
         op.f("ix_garden_scheduledata_id"), "garden_scheduledata", ["id"], unique=False
     )
-    op.create_table(
-        "garden_stage",
-        sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("updated_at", sa.DateTime(), nullable=True),
-        sa.Column("created_at", sa.DateTime(), nullable=True),
-        sa.Column("count", sa.Integer(), nullable=False),
-        sa.Column("at", sa.DateTime(), nullable=False),
-        sa.PrimaryKeyConstraint("id"),
-    )
-    op.create_index(op.f("ix_garden_stage_id"), "garden_stage", ["id"], unique=False)
     items = op.create_table(
         "inventory_data",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -206,24 +196,9 @@ def upgrade() -> None:
         sa.Column("data_id", sa.Integer(), nullable=False),
         sa.Column("raisedbed_id", sa.Integer(), nullable=False),
         sa.Column("count", sa.Integer(), nullable=False),
-        sa.Column("germinated_id", sa.Integer(), nullable=True),
-        sa.Column("planted_id", sa.Integer(), nullable=True),
-        sa.Column("harvested_id", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(
             ["data_id"],
             ["inventory_data.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["germinated_id"],
-            ["garden_stage.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["harvested_id"],
-            ["garden_stage.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["planted_id"],
-            ["garden_stage.id"],
         ),
         sa.ForeignKeyConstraint(
             ["raisedbed_id"],
@@ -239,7 +214,6 @@ def upgrade() -> None:
         sa.Column("created_at", sa.DateTime(), nullable=True),
         sa.Column("item_id", sa.Integer(), nullable=False),
         sa.Column("date", sa.DateTime(), nullable=False),
-        sa.Column("location", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
         sa.Column("action", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
         sa.ForeignKeyConstraint(
             ["item_id"],
@@ -326,6 +300,22 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("blocker_id", "blocked_id"),
     )
     op.create_table(
+        "garden_action",
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("updated_at", sa.DateTime(), nullable=True),
+        sa.Column("created_at", sa.DateTime(), nullable=True),
+        sa.Column("crop_id", sa.Integer(), nullable=False),
+        sa.Column("count", sa.Integer(), nullable=False),
+        sa.Column("at", sa.DateTime(), nullable=False),
+        sa.Column("stage", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.ForeignKeyConstraint(
+            ["crop_id"],
+            ["garden_crop.id"],
+        ),
+        sa.PrimaryKeyConstraint("id"),
+    )
+    op.create_index(op.f("ix_garden_action_id"), "garden_action", ["id"], unique=False)
+    op.create_table(
         "pantry_openedgood",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
@@ -383,6 +373,8 @@ def downgrade() -> None:
     op.drop_table("tracker_location")
     op.drop_index(op.f("ix_pantry_openedgood_id"), table_name="pantry_openedgood")
     op.drop_table("pantry_openedgood")
+    op.drop_index(op.f("ix_garden_action_id"), table_name="garden_action")
+    op.drop_table("garden_action")
     op.drop_table("block")
     op.drop_index(op.f("ix_tasks_action_id"), table_name="tasks_action")
     op.drop_table("tasks_action")
@@ -413,8 +405,6 @@ def downgrade() -> None:
     op.drop_index(op.f("ix_inventory_data_type"), table_name="inventory_data")
     op.drop_index(op.f("ix_inventory_data_id"), table_name="inventory_data")
     op.drop_table("inventory_data")
-    op.drop_index(op.f("ix_garden_stage_id"), table_name="garden_stage")
-    op.drop_table("garden_stage")
     op.drop_index(op.f("ix_garden_scheduledata_id"), table_name="garden_scheduledata")
     op.drop_table("garden_scheduledata")
     op.drop_index(op.f("ix_compost_npkdata_id"), table_name="compost_npkdata")

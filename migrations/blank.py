@@ -1,5 +1,3 @@
-
-
 def _csv_data(filename: str) -> Iterator[dict]:
     with open(filename) as handle:
         reader = csv.reader(handle)
@@ -8,11 +6,12 @@ def _csv_data(filename: str) -> Iterator[dict]:
             data = dict(zip(header, row))
             yield data
 
+
 data = (
     ("npk", npkdata),
     ("schedule", schedule),
-    ("items", item),
-    ("gpscoords", gpscoords)
+    ("items", items),
+    ("gpscoords", gpscoords),
 )
 for name, model in data:
     filename = f"./migrations/data/{name}.csv"

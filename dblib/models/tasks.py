@@ -26,11 +26,11 @@ class Block(SQLModel, table=True):
         primary_key=True, foreign_key=f"{Action.__tablename__}.id"
     )
     blocker: Action = Relationship(  # noqa: F821
-        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": 'Block.blocker_id'},
+        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": "Block.blocker_id"},
     )
     blocked_id: TABLE_ID = Field(
         primary_key=True, foreign_key=f"{Action.__tablename__}.id"
     )
     blocked: Action = Relationship(  # noqa: F821
-        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": 'Block.blocked_id'},
+        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": "Block.blocked_id"},
     )

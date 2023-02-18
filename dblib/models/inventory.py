@@ -11,7 +11,6 @@ class Data(Table, table=True):
     type: inventory.ItemType = Field(index=True)
 
 
-
 class Item(Table, table=True):
     data_id: TABLE_ID = Field(foreign_key=f"{Data.__tablename__}.id")
     data: Data = Relationship(  # noqa: F821
@@ -26,5 +25,4 @@ class Change(Table, table=True):
         sa_relationship_kwargs={"lazy": "selectin"},
     )
     date: datetime
-    location: str
     action: inventory.Action
