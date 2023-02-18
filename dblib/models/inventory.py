@@ -8,6 +8,8 @@ from ._base import TABLE_ID, Table
 
 class Data(Table, table=True):
     name: str
+    type: inventory.ItemType = Field(index=True)
+
 
 
 class Item(Table, table=True):
@@ -15,7 +17,6 @@ class Item(Table, table=True):
     data: Data = Relationship(  # noqa: F821
         sa_relationship_kwargs={"lazy": "selectin"},
     )
-    type: inventory.ItemType = Field(index=True)
     expires: datetime | None = None
 
 

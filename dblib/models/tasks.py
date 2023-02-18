@@ -21,13 +21,9 @@ class Action(Table, table=True):
     )
 
 
-class Other(Table, table=True):
-    ...
-
-
 class Block(SQLModel, table=True):
     blocker_id: TABLE_ID = Field(
-        primary_key=True, foreign_key=f"{Other.__tablename__}.id"
+        primary_key=True, foreign_key=f"{Action.__tablename__}.id"
     )
     blocker: Action = Relationship(  # noqa: F821
         sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": 'Block.blocker_id'},
