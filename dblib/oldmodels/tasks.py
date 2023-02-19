@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlmodel import Field, Relationship, SQLModel
 
 from ..enums import tasks
-from ._base import TABLE_ID, Table
+from ..models._base import TABLE_ID, Table
 
 
 class Action(Table, table=True):

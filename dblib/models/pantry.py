@@ -10,7 +10,7 @@ from .inventory import ItemLink
 class Container(Table, table=True):
     name: str
     units: imperial.Volume
-    size: int
+    size: float
 
 
 class StockedGood(ItemLink, table=True):

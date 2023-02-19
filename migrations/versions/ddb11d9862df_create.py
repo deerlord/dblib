@@ -1,8 +1,8 @@
 """create
 
-Revision ID: c561ca4b6619
+Revision ID: ddb11d9862df
 Revises: 
-Create Date: 2023-02-18 20:05:01.381445
+Create Date: 2023-02-18 21:05:52.117441
 
 """
 from alembic import op
@@ -11,7 +11,7 @@ import sqlmodel
 
 
 # revision identifiers, used by Alembic.
-revision = 'c561ca4b6619'
+revision = 'ddb11d9862df'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -35,7 +35,7 @@ def upgrade() -> None:
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('name', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('units', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('size', sa.Integer(), nullable=False),
+    sa.Column('size', sa.Float(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_pantry_container_id'), 'pantry_container', ['id'], unique=False)
