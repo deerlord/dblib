@@ -29,17 +29,26 @@ class Forecast(Table, table=True):
         foreign_key=f"{QuantitativeValue.__tablename__}.id"
     )
     probability_of_precipitation: QuantitativeValue = Relationship(  # noqa: F821
-        sa_relationship_kwargs={"lazy": "selectin"},
+        sa_relationship_kwargs={
+            "lazy": "selectin",
+            "foreign_keys": "Forecast.probability_of_precipitation_id",
+        },
     )
     dewpoint_id: TABLE_ID = Field(foreign_key=f"{QuantitativeValue.__tablename__}.id")
     dewpoint: QuantitativeValue = Relationship(  # noqa: F821
-        sa_relationship_kwargs={"lazy": "selectin"},
+        sa_relationship_kwargs={
+            "lazy": "selectin",
+            "foreign_keys": "Forecast.dewpoint_id",
+        },
     )
     relative_humidity_id: TABLE_ID = Field(
         foreign_key=f"{QuantitativeValue.__tablename__}.id"
     )
     relative_humidity: QuantitativeValue = Relationship(  # noqa: F821
-        sa_relationship_kwargs={"lazy": "selectin"},
+        sa_relationship_kwargs={
+            "lazy": "selectin",
+            "foreign_keys": "Forecast.relative_humidity_id",
+        },
     )
     wind_direction: str
     short_forecast: str
