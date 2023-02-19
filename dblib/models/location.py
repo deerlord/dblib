@@ -1,6 +1,6 @@
 from sqlalchemy import UniqueConstraint
 
-from ..models._base import Table
+from ._base import Table
 
 
 class GPSCoords(Table, table=True):

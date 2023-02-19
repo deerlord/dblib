@@ -2,8 +2,8 @@ from datetime import datetime
 
 from sqlmodel import Field, Relationship
 
-from ._base import TABLE_ID, Table
 from ..models.inventory import ItemLink
+from ._base import TABLE_ID, Table
 from .sensors import Sensor
 
 

@@ -3,9 +3,9 @@ from uuid import UUID
 
 from sqlmodel import Field, Relationship
 
-from ._base import TABLE_ID, Table
 from ..models.inventory import ItemLink
-from .location import GPSCoords
+from ..models.location import GPSCoords
+from ._base import TABLE_ID, Table
 
 
 class Sensor(ItemLink, table=True):

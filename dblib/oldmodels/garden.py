@@ -5,7 +5,7 @@ from sqlmodel import Field, Relationship
 from ..enums import garden
 from ..models._base import TABLE_ID, Table
 from ..models.inventory import ItemLink
-from .location import GPSCoords
+from ..models.location import GPSCoords
 
 
 class RaisedBed(Table, table=True):

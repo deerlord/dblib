@@ -1,4 +1,1 @@
-from . import (  # noqa: F401
-    inventory,
-    pantry,
-)
+from . import inventory, location, pantry, weather  # noqa: F401
