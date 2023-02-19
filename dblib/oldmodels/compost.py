@@ -1,4 +1,4 @@
-from ._base import Table
+from ..models._base import Table
 
 
 class NPKData(Table, table=True):
