@@ -13,7 +13,10 @@ async def main():
     topdir = sys.argv[1]
     for package_name, models in database.data_models().items():
         dirpath = f"{topdir}/{package_name}"
-        os.makedirs(dirpath)
+        try:
+            os.makedirs(dirpath)
+        except:
+            pass
         for model in models:
             await _dump(dirpath, model)
 
