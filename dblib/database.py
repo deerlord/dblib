@@ -7,13 +7,14 @@ from typing import AsyncGenerator, Generator, Type, TypeAlias, TypeVar
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from sqlmodel import SQLModel, select
+from sqlmodel import SQLModel
 from sqlmodel.sql.expression import SelectOfScalar
+from .models._base import Table
 
 from . import models
 from .settings import Settings
 
-S = TypeVar("S", bound=SQLModel)
+T = TypeVar("T", bound=Table)
 
 settings = Settings()
 
@@ -52,24 +53,11 @@ async def connection() -> AsyncGenerator[SESSION, None]:
             await local.rollback()
 
 
-async def get_all(statement: SelectOfScalar[S]) -> AsyncGenerator[S, None]:  # type: ignore
+async def get_all(statement: SelectOfScalar[T]) -> AsyncGenerator[T, None]:  # type: ignore
     async with connection() as db:
         results = await db.execute(statement)
         for result in results.fetchall():
             yield result  # type: ignore
-
-
-async def get_relationship(parent: SQLModel, foreign: Type[S]) -> S | None:
-    key = f"{foreign.__name__.lower()}_id"
-    retval = None
-    fk_id = getattr(parent, key, None)
-    if fk_id is None:
-        return retval
-    statement = select(foreign).where(foreign.id == fk_id)
-    async for result in get_all(statement):
-        retval = result
-        break
-    return retval
 
 
 def data_models(name: str | None = None) -> dict[str, list[Type[SQLModel]]]:

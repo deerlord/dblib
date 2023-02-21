@@ -7,7 +7,9 @@ from .location import GPSCoords
 
 
 class RaisedBed(Table, Related(GPSCoords), table=True):
-    ...
+    width: float
+    length: float
+    height: float
 
 
 class Crop(Table, Related(Item), Related(RaisedBed), table=True):

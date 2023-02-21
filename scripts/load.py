@@ -1,6 +1,7 @@
 import asyncio
 import csv
 import os
+import sys
 from typing import Type
 
 from sqlmodel import SQLModel
@@ -9,9 +10,9 @@ from dblib import database
 
 
 async def main():
-    topdirs = "migrations", "data"
+    topdir = sys.argv[1]
     for package_name, models in database.data_models().items():
-        dirpath = os.path.join(*topdirs, package_name)
+        dirpath = os.path.join(topdir, package_name)
         for model in models:
             await _load(dirpath, model)
 

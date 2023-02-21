@@ -12,11 +12,9 @@ from dblib import database
 async def main():
     topdir = sys.argv[1]
     for package_name, models in database.data_models().items():
-        dirpath = f"{topdir}/{package_name}"
-        try:
+        dirpath = os.path.join(topdir, package_name)
+        if not os.path.exists(dirpath):
             os.makedirs(dirpath)
-        except:
-            pass
         for model in models:
             await _dump(dirpath, model)
 
