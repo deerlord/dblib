@@ -1,8 +1,9 @@
 from datetime import datetime
-from typing import TypeAlias
+from typing import Type, TypeAlias
 
+from pydantic import BaseModel, create_model
 from sqlalchemy.orm import declared_attr
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
 
 TABLE_ID: TypeAlias = int
 
@@ -21,3 +22,23 @@ class Table(SQLModel):
         *_, module = cls.__module__.split(".")
         name = cls.__name__.lower()
         return f"{module.lower()}_{name}"
+
+
+def Related(model: Type[Table]) -> Type[BaseModel]:
+    lowername = model.__name__.lower()
+    modelname = f"{lowername}Relationship"
+    tablename = model.__tablename__
+    id_field = Field(foreign_key=f"{tablename}.id")
+    id_name =  f"{lowername}_id"
+    related_field = Relationship(  # noqa: F821
+        sa_relationship_kwargs={
+            "lazy": "selectin",
+            "foreign_keys": f"{modelname}.{id_name}",
+        },
+    )
+    fields = {
+        id_name: (TABLE_ID, id_field),
+        lowername: (model, related_field),
+    }
+    model = create_model(modelname, __base__=SQLModel, **fields)
+    return model

@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 from sqlmodel import Field, Relationship
 
 from ..enums import garden
-from ..models._base import TABLE_ID, Table
-from ..models.inventory import ItemLink
+from ..models._base import TABLE_ID, Table, Related
+from ..models.inventory import Item
 from ..models.location import GPSCoords
 
 
@@ -17,7 +17,7 @@ class RaisedBed(Table, table=True):
     )
 
 
-class Crop(ItemLink, table=True):
+class Crop(Table, Related(Item), table=True):
     raisedbed_id: TABLE_ID = Field(foreign_key=f"{RaisedBed.__tablename__}.id")
     raisedbed: RaisedBed = Relationship(  # noqa: F821
         sa_relationship_kwargs={"lazy": "selectin"},

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from ._base import Table
+from ..models._base import Table
 
 
 class Message(Table, table=True):
