@@ -3,10 +3,9 @@ from uuid import UUID
 
 from sqlmodel import Field, Relationship
 
+from ..models._base import TABLE_ID, Related, Table
 from ..models.inventory import Item
 from ..models.location import GPSCoords
-from ..models._base import Table, TABLE_ID, Related
-
 
 
 class Sensor(Table, Related(Item), table=True):
