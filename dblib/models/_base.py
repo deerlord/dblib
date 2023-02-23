@@ -28,10 +28,10 @@ class Table(SQLModel):
 
 def Related(model: Type[Table]) -> Type[BaseModel]:
     lowername = model.__name__.lower()
-    modelname = f"{lowername}Relationship"
+    modelname = f"{model.__name__.capitalize()}Relationship"
     tablename = model.__tablename__
     id_field = Field(foreign_key=f"{tablename}.id")
-    id_name = f"{lowername}_id"
+    id_name = f"{tablename}_id"
     related_field = Relationship(  # noqa: F821
         sa_relationship_kwargs={
             "lazy": "selectin",
