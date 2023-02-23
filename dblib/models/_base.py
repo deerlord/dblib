@@ -1,7 +1,9 @@
+from abc import ABC
 from datetime import datetime
-from typing import Type, TypeAlias
+from typing import Generic, Type, TypeAlias, TypeVar
 
 from pydantic import BaseModel, create_model
+from pydantic.generics import GenericModel
 from sqlalchemy.orm import declared_attr
 from sqlmodel import Field, Relationship, SQLModel
 

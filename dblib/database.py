@@ -9,9 +9,9 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engin
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 from sqlmodel.sql.expression import SelectOfScalar
-from .models._base import Table
 
 from . import models
+from .models._base import Table
 from .settings import Settings
 
 T = TypeVar("T", bound=Table)
