@@ -1,1 +1,1 @@
-from . import garden, inventory, location, pantry  # noqa: F401
+from . import garden, inventory, location, pantry, weather  # noqa: F401
