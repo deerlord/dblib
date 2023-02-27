@@ -1,4 +1,4 @@
-from sqlalchemy import UniqueConstraint
+from sqlmodel import UniqueConstraint
 
 from ._base import Table
 
