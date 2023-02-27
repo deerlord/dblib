@@ -1,8 +1,8 @@
 """create
 
-Revision ID: f57cc50440c7
+Revision ID: e408e56cdc49
 Revises: 
-Create Date: 2023-02-23 10:03:40.215437
+Create Date: 2023-02-26 23:28:28.841902
 
 """
 from alembic import op
@@ -11,7 +11,7 @@ import sqlmodel
 
 
 # revision identifiers, used by Alembic.
-revision = "f57cc50440c7"
+revision = "e408e56cdc49"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,6 +22,7 @@ def upgrade() -> None:
     op.create_table(
         "inventory_item",
         sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
         sa.Column("created_at", sa.DateTime(), nullable=True),
         sa.Column("name", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
@@ -37,6 +38,7 @@ def upgrade() -> None:
     op.create_table(
         "location_gpscoords",
         sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
         sa.Column("created_at", sa.DateTime(), nullable=True),
         sa.Column("latitude", sa.Float(), nullable=False),
@@ -51,6 +53,7 @@ def upgrade() -> None:
     op.create_table(
         "pantry_container",
         sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
         sa.Column("created_at", sa.DateTime(), nullable=True),
         sa.Column("name", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
@@ -65,6 +68,7 @@ def upgrade() -> None:
         "garden_raisedbed",
         sa.Column("location_gpscoords_id", sa.Integer(), nullable=False),
         sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
         sa.Column("created_at", sa.DateTime(), nullable=True),
         sa.Column("width", sa.Float(), nullable=False),
@@ -83,6 +87,7 @@ def upgrade() -> None:
         "garden_scheduledata",
         sa.Column("inventory_item_id", sa.Integer(), nullable=False),
         sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
         sa.Column("created_at", sa.DateTime(), nullable=True),
         sa.Column("germinated", sa.Interval(), nullable=False),
@@ -102,6 +107,7 @@ def upgrade() -> None:
         sa.Column("pantry_container_id", sa.Integer(), nullable=False),
         sa.Column("inventory_item_id", sa.Integer(), nullable=False),
         sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
         sa.Column("created_at", sa.DateTime(), nullable=True),
         sa.Column("packed", sa.DateTime(), nullable=False),
@@ -121,10 +127,43 @@ def upgrade() -> None:
         op.f("ix_pantry_stockedgood_id"), "pantry_stockedgood", ["id"], unique=False
     )
     op.create_table(
+        "weather_alert",
+        sa.Column("location_gpscoords_id", sa.Integer(), nullable=False),
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False),
+        sa.Column("updated_at", sa.DateTime(), nullable=True),
+        sa.Column("created_at", sa.DateTime(), nullable=True),
+        sa.Column("noaa_id", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("sent", sa.DateTime(), nullable=False),
+        sa.Column("effective", sa.DateTime(), nullable=False),
+        sa.Column("onset", sa.DateTime(), nullable=True),
+        sa.Column("expires", sa.DateTime(), nullable=False),
+        sa.Column("ends", sa.DateTime(), nullable=True),
+        sa.Column("status", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("message_type", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("category", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("urgency", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("event", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("sender", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("sender_name", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("headline", sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+        sa.Column("description", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("instruction", sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+        sa.Column("response", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.ForeignKeyConstraint(
+            ["location_gpscoords_id"],
+            ["location_gpscoords.id"],
+        ),
+        sa.PrimaryKeyConstraint("id"),
+        sa.UniqueConstraint("noaa_id"),
+    )
+    op.create_index(op.f("ix_weather_alert_id"), "weather_alert", ["id"], unique=False)
+    op.create_table(
         "garden_crop",
         sa.Column("garden_raisedbed_id", sa.Integer(), nullable=False),
         sa.Column("inventory_item_id", sa.Integer(), nullable=False),
         sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
         sa.Column("created_at", sa.DateTime(), nullable=True),
         sa.Column("count", sa.Integer(), nullable=False),
@@ -143,6 +182,7 @@ def upgrade() -> None:
         "pantry_consumed",
         sa.Column("pantry_stockedgood_id", sa.Integer(), nullable=False),
         sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
         sa.Column("created_at", sa.DateTime(), nullable=True),
         sa.Column("at", sa.DateTime(), nullable=False),
@@ -161,6 +201,7 @@ def upgrade() -> None:
         "garden_action",
         sa.Column("garden_crop_id", sa.Integer(), nullable=False),
         sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=True),
         sa.Column("created_at", sa.DateTime(), nullable=True),
         sa.Column("count", sa.Integer(), nullable=False),
@@ -184,6 +225,8 @@ def downgrade() -> None:
     op.drop_table("pantry_consumed")
     op.drop_index(op.f("ix_garden_crop_id"), table_name="garden_crop")
     op.drop_table("garden_crop")
+    op.drop_index(op.f("ix_weather_alert_id"), table_name="weather_alert")
+    op.drop_table("weather_alert")
     op.drop_index(op.f("ix_pantry_stockedgood_id"), table_name="pantry_stockedgood")
     op.drop_table("pantry_stockedgood")
     op.drop_index(op.f("ix_garden_scheduledata_id"), table_name="garden_scheduledata")

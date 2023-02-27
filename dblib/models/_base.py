@@ -1,23 +1,24 @@
-from abc import ABC
 from datetime import datetime
-from typing import Generic, Type, TypeAlias, TypeVar
+from typing import Type, TypeAlias
+from uuid import UUID, uuid4
 
 from pydantic import BaseModel, create_model
-from pydantic.generics import GenericModel
 from sqlalchemy.orm import declared_attr
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field, Relationship, SQLModel, UniqueConstraint
 
 TABLE_ID: TypeAlias = int
 
 
 class Table(SQLModel):
+    __table_args__ = (UniqueConstraint("uuid"),)
     id: TABLE_ID | None = Field(
         default=None, primary_key=True, index=True, nullable=False
     )
-    updated_at: datetime | None = Field(
+    uuid: UUID = Field(default_factory=uuid4, index=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(
         default_factory=datetime.utcnow, sa_column_kwargs={"onupdate": datetime.utcnow}
     )
-    created_at: datetime | None = Field(default_factory=datetime.utcnow)
 
     @declared_attr  # type: ignore
     def __tablename__(cls) -> str:
@@ -26,12 +27,17 @@ class Table(SQLModel):
         return f"{module.lower()}_{name}"
 
 
-def Related(model: Type[Table]) -> Type[BaseModel]:
-    lowername = model.__name__.lower()
-    modelname = f"{model.__name__.capitalize()}Relationship"
+def Related(model: Type[Table], fieldname: str | None = None) -> Type[BaseModel]:
     tablename = model.__tablename__
     id_field = Field(foreign_key=f"{tablename}.id")
-    id_name = f"{tablename}_id"
+    if fieldname:
+        lowername = fieldname.lower()
+        id_name = f"{lowername}_id"
+        modelname = f"{model.__name__}As{fieldname.capitalize()}Relationship"
+    else:
+        lowername = model.__name__.lower()
+        id_name = f"{tablename.lower()}_id"
+        modelname = f"{model.__name__}Relationship"
     related_field = Relationship(  # noqa: F821
         sa_relationship_kwargs={
             "lazy": "selectin",

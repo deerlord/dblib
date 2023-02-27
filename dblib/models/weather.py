@@ -1,7 +1,9 @@
+from datetime import datetime
+
 from sqlmodel import UniqueConstraint
+
 from ._base import Related, Table
 from .location import GPSCoords
-from datetime import datetime
 
 
 class Alert(Table, Related(GPSCoords), table=True):
