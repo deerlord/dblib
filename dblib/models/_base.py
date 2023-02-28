@@ -29,14 +29,14 @@ class Table(SQLModel):
 
 def Related(model: Type[Table], fieldname: str | None = None) -> Type[BaseModel]:
     tablename = model.__tablename__
-    id_field = Field(foreign_key=f"{tablename}.id")
+    id_field = Field(foreign_key=f"{tablename}.uuid")
     if fieldname:
         lowername = fieldname.lower()
-        id_name = f"{lowername}_id"
+        id_name = f"{lowername}_uuid"
         modelname = f"{model.__name__}As{fieldname.capitalize()}Relationship"
     else:
         lowername = model.__name__.lower()
-        id_name = f"{tablename.lower()}_id"
+        id_name = f"{tablename.lower()}_uuid"
         modelname = f"{model.__name__}Relationship"
     related_field = Relationship(  # noqa: F821
         sa_relationship_kwargs={
