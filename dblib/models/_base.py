@@ -1,20 +1,19 @@
 from datetime import datetime
-from typing import Type, TypeAlias
-from uuid import UUID, uuid4
+from typing import Type, TypeAlias, TypeVar
+from uuid import UUID
 
-from pydantic import BaseModel, create_model
+from pydantic import create_model
 from sqlalchemy.orm import declared_attr
-from sqlmodel import Field, Relationship, SQLModel, UniqueConstraint
+from sqlmodel import Field, Relationship, SQLModel
 
-TABLE_ID: TypeAlias = int
+TABLE_ID: TypeAlias = UUID
+T = TypeVar("T", bound="Table")
 
 
 class Table(SQLModel):
-    __table_args__ = (UniqueConstraint("uuid"),)
-    id: TABLE_ID | None = Field(
-        default=None, primary_key=True, index=True, nullable=False
+    uuid: TABLE_ID | None = Field(
+        default_factory=None, index=True, primary_key=True, nullable=False
     )
-    uuid: UUID = Field(default_factory=uuid4, index=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(
         default_factory=datetime.utcnow, sa_column_kwargs={"onupdate": datetime.utcnow}
@@ -27,9 +26,17 @@ class Table(SQLModel):
         return f"{module.lower()}_{name}"
 
 
-def Related(model: Type[Table], fieldname: str | None = None) -> Type[BaseModel]:
+def Related(
+    model: Type[Table], fieldname: str | None = None, nullable: bool = False
+) -> Type[SQLModel]:
     tablename = model.__tablename__
-    id_field = Field(foreign_key=f"{tablename}.uuid")
+    kwargs = {}
+    if nullable:
+        id_type = TABLE_ID | None
+        kwargs.update({"default": None})
+    else:
+        id_type = TABLE_ID
+    id_field = Field(foreign_key=f"{tablename}.uuid", nullable=nullable, **kwargs)
     if fieldname:
         lowername = fieldname.lower()
         id_name = f"{lowername}_uuid"
@@ -45,7 +52,7 @@ def Related(model: Type[Table], fieldname: str | None = None) -> Type[BaseModel]
         },
     )
     fields = {
-        id_name: (TABLE_ID, id_field),
+        id_name: (id_type, id_field),
         lowername: (model, related_field),
     }
     model = create_model(modelname, __base__=SQLModel, **fields)
