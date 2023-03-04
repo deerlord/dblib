@@ -1,8 +1,8 @@
 """create
 
-Revision ID: 1e6e064a58df
+Revision ID: b221de6ba85b
 Revises: 
-Create Date: 2023-03-01 00:01:54.629135
+Create Date: 2023-03-01 20:53:37.471651
 
 """
 from alembic import op
@@ -11,7 +11,7 @@ import sqlmodel
 
 
 # revision identifiers, used by Alembic.
-revision = "1e6e064a58df"
+revision = "b221de6ba85b"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -80,7 +80,7 @@ def upgrade() -> None:
         op.f("ix_pantry_container_uuid"), "pantry_container", ["uuid"], unique=False
     )
     op.create_table(
-        "garden_irrigationsystem",
+        "garden_irrigationgrid",
         sa.Column(
             "garden_irrigationhose_uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False
         ),
@@ -96,8 +96,8 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("uuid"),
     )
     op.create_index(
-        op.f("ix_garden_irrigationsystem_uuid"),
-        "garden_irrigationsystem",
+        op.f("ix_garden_irrigationgrid_uuid"),
+        "garden_irrigationgrid",
         ["uuid"],
         unique=False,
     )
@@ -124,13 +124,13 @@ def upgrade() -> None:
     )
     op.create_table(
         "pantry_stockedgood",
-        sa.Column(
-            "pantry_container_uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False
-        ),
         sa.Column("inventory_item_uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False),
         sa.Column("uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=False),
+        sa.Column(
+            "pantry_container_uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False
+        ),
         sa.Column("packed", sa.DateTime(), nullable=False),
         sa.Column("expires", sa.DateTime(), nullable=False),
         sa.Column("count", sa.Integer(), nullable=False),
@@ -185,20 +185,20 @@ def upgrade() -> None:
     op.create_table(
         "garden_raisedbed",
         sa.Column(
-            "garden_irrigationsystem_uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False
-        ),
-        sa.Column(
             "location_gpscoords_uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False
         ),
         sa.Column("uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=False),
+        sa.Column(
+            "garden_irrigationgrid_uuid", sqlmodel.sql.sqltypes.GUID(), nullable=True
+        ),
         sa.Column("width", sa.Float(), nullable=False),
         sa.Column("length", sa.Float(), nullable=False),
         sa.Column("height", sa.Float(), nullable=False),
         sa.ForeignKeyConstraint(
-            ["garden_irrigationsystem_uuid"],
-            ["garden_irrigationsystem.uuid"],
+            ["garden_irrigationgrid_uuid"],
+            ["garden_irrigationgrid.uuid"],
         ),
         sa.ForeignKeyConstraint(
             ["location_gpscoords_uuid"],
@@ -231,13 +231,13 @@ def upgrade() -> None:
     )
     op.create_table(
         "garden_crop",
-        sa.Column(
-            "garden_raisedbed_uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False
-        ),
         sa.Column("inventory_item_uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False),
         sa.Column("uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=False),
+        sa.Column(
+            "garden_raisedbed_uuid", sqlmodel.sql.sqltypes.GUID(), nullable=False
+        ),
         sa.Column("count", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(
             ["garden_raisedbed_uuid"],
@@ -288,9 +288,9 @@ def downgrade() -> None:
     op.drop_index(op.f("ix_garden_scheduledata_uuid"), table_name="garden_scheduledata")
     op.drop_table("garden_scheduledata")
     op.drop_index(
-        op.f("ix_garden_irrigationsystem_uuid"), table_name="garden_irrigationsystem"
+        op.f("ix_garden_irrigationgrid_uuid"), table_name="garden_irrigationgrid"
     )
-    op.drop_table("garden_irrigationsystem")
+    op.drop_table("garden_irrigationgrid")
     op.drop_index(op.f("ix_pantry_container_uuid"), table_name="pantry_container")
     op.drop_table("pantry_container")
     op.drop_index(op.f("ix_location_gpscoords_uuid"), table_name="location_gpscoords")

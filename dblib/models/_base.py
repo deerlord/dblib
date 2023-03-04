@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Type, TypeAlias, TypeVar
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from pydantic import create_model
 from sqlalchemy.orm import declared_attr
@@ -11,8 +11,8 @@ T = TypeVar("T", bound="Table")
 
 
 class Table(SQLModel):
-    uuid: TABLE_ID | None = Field(
-        default_factory=None, index=True, primary_key=True, nullable=False
+    uuid: TABLE_ID = Field(
+        default_factory=uuid4, index=True, primary_key=True, nullable=False
     )
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(

@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from sqlmodel import UniqueConstraint
 
 from ..enums import garden
-from ._base import Related, Table
+from ._base import Table, Related
 from .inventory import Item
 from .location import GPSCoords
 
@@ -23,15 +23,14 @@ class IrrigationGrid(Table, Related(IrrigationHose), table=True):
     row_count: int
 
 
-class RaisedBed(
-    Table, Related(GPSCoords), Related(IrrigationGrid, nullable=True), table=True
-):
+class RaisedBed(Table, Related(IrrigationGrid), Related(GPSCoords), table=True):
     width: float
     length: float
     height: float
 
 
-class Crop(Table, Related(Item), Related(RaisedBed), table=True):
+class Crop(Table, Related(Item), table=True):
+    raisedbed: RaisedBed
     count: int = 0
 
 
@@ -41,7 +40,12 @@ class Action(Table, Related(Crop), table=True):
     stage: garden.Stage
 
 
-class ScheduleData(Table, Related(Item), table=True):
-    germinated: timedelta
-    planted: timedelta
-    harvested: timedelta
+class WateringScheduleData(Table, Related(Item), table=True):
+    gallons: float
+    period: timedelta
+
+
+class GrowthScheduleData(Table, Related(Item), table=True):
+    germinate: timedelta
+    plant: timedelta
+    harvest: timedelta

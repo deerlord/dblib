@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from ..enums import imperial, pantry
-from ._base import Related, Table
+from ._base import Table, Related
 from .inventory import Item
 
 
@@ -11,7 +11,8 @@ class Container(Table, table=True):
     size: float
 
 
-class StockedGood(Table, Related(Item), Related(Container), table=True):
+class StockedGood(Table, Related(Item), table=True):
+    container: Container
     packed: datetime
     expires: datetime
     count: int

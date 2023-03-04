@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlmodel import UniqueConstraint
 
-from ._base import Related, Table
+from ._base import Table, Related
 from .location import GPSCoords
 
 
