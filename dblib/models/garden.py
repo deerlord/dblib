@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from sqlmodel import UniqueConstraint
 
 from ..enums import garden
-from ._base import Table, Related
+from ._base import Related, Table
 from .inventory import Item
 from .location import GPSCoords
 

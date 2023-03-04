@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from ..enums import imperial, pantry
-from ._base import Table, Related
+from ._base import Related, Table
 from .inventory import Item
 
 
