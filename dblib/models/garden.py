@@ -35,8 +35,24 @@ class Plant(Base, table=True):
             "foreign_keys": "Plant.compost_npkdata_uuid",
         }
     )
-    growth_schedule: GrowthSchedule
-    watering_schedule: WateringSchedule
+    garden_growthschedule_uuid: TABLE_ID = Field(
+        foreign_key=f"{GrowthSchedule.__tablename__}.uuid"
+    )
+    growth_schedule: GrowthSchedule = Relationship(
+        sa_relationship_args={
+            "lazy": "selectin",
+            "foreign_keys": "Plant.garden_growthschedule_uuid",
+        }
+    )
+    garden_wateringschedule_uuid: TABLE_ID = Field(
+        foreign_key=f"{WateringSchedule.__tablename__}.uuid"
+    )
+    watering_schedule: WateringSchedule = Relationship(
+        sa_relationship_kwargs={
+            "lazy": "selectin",
+            "foreign_keys": "Plant.garden_wateringschedule_uuid"
+        }
+    )
 
 
 class IrrigationHose(Base, table=True):
