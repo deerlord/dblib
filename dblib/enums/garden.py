@@ -2,9 +2,9 @@ from enum import Enum
 
 
 class Stage(str, Enum):
-    germinated = "germinated"
-    planted = "planted"
-    harvested = "harvested"
+    germinat = "germinated"
+    plant = "planted"
+    harvest = "harvested"
 
 
 class IrrigationHoseType(str, Enum):

@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from ..models._base import Table
+from ..models._base import Base
 
 
-class Message(Table, table=True):
+class Message(Base, table=True):
     topic: str
     timestamp: datetime
     payload: bytes

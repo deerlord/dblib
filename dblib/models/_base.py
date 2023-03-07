@@ -11,6 +11,14 @@ T = TypeVar("T", bound="Table")
 
 
 class Table(SQLModel):
+    @declared_attr  # type: ignore
+    def __tablename__(cls) -> str:
+        *_, module = cls.__module__.split(".")
+        name = cls.__name__.lower()
+        return f"{module.lower()}_{name}"
+
+
+class Base(Table):
     uuid: TABLE_ID = Field(
         default_factory=uuid4, index=True, primary_key=True, nullable=False
     )
@@ -24,36 +32,3 @@ class Table(SQLModel):
         *_, module = cls.__module__.split(".")
         name = cls.__name__.lower()
         return f"{module.lower()}_{name}"
-
-
-def Related(
-    model: Type[Table], fieldname: str | None = None, nullable: bool = False
-) -> Type[SQLModel]:
-    tablename = model.__tablename__
-    kwargs = {}
-    if nullable:
-        id_type = TABLE_ID | None
-        kwargs.update({"default": None})
-    else:
-        id_type = TABLE_ID
-    id_field = Field(foreign_key=f"{tablename}.uuid", nullable=nullable, **kwargs)
-    if fieldname:
-        lowername = fieldname.lower()
-        id_name = f"{lowername}_uuid"
-        modelname = f"{model.__name__}As{fieldname.capitalize()}Relationship"
-    else:
-        lowername = model.__name__.lower()
-        id_name = f"{tablename.lower()}_uuid"
-        modelname = f"{model.__name__}Relationship"
-    related_field = Relationship(  # noqa: F821
-        sa_relationship_kwargs={
-            "lazy": "selectin",
-            "foreign_keys": f"{modelname}.{id_name}",
-        },
-    )
-    fields = {
-        id_name: (id_type, id_field),
-        lowername: (model, related_field),
-    }
-    model = create_model(modelname, __base__=SQLModel, **fields)
-    return model

@@ -2,7 +2,7 @@ import shutil
 import pytest
 
 from dblib import database
-from dblib.models._base import Table
+from dblib.models._base import Base
 from sqlmodel import select
 import filecmp
 
@@ -11,7 +11,7 @@ from . import setup
 
 @pytest.mark.asyncio
 async def test_database(setup):
-    class TestModel(Table, table=True):
+    class TestModel(Base, table=True):
         ...
 
     model = TestModel()
@@ -28,10 +28,10 @@ async def test_database(setup):
 
 @pytest.mark.asyncio
 async def test_selects(setup):
-    class ModelOne(Table, table=True):
+    class ModelOne(Base, table=True):
         ...
 
-    class ModelTwo(Table, table=True):
+    class ModelTwo(Base, table=True):
         ...
 
     await database._create_tables()

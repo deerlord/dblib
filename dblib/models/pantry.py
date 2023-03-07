@@ -1,24 +1,58 @@
 from datetime import datetime
 
+from sqlmodel import Field, Relationship
+
 from ..enums import imperial, pantry
-from ._base import Related, Table
+from ._base import TABLE_ID, Base
 from .inventory import Item
 
 
-class Container(Table, table=True):
+class Container(Base, table=True):
     name: str
     units: imperial.Volume
     size: float
 
 
-class StockedGood(Table, Related(Item), table=True):
-    container: Container
-    packed: datetime
-    expires: datetime
+class Good(Base, table=True):
+    inventory_item_uuid: TABLE_ID = Field(foreign_key=f"{Item.__tablename__}.uuid")
+    item: Item = Relationship(
+        sa_relationship_kwargs={
+            "lazy": "selectin",
+            "foreign_keys": "Good.inventory_item_uuid",
+        }
+    )
+    pantry_container_uuid: TABLE_ID = Field(
+        foreign_key=f"{Container.__tablename__}.uuid"
+    )
+    container: Container = Relationship(
+        sa_relationship_kwargs={
+            "lazy": "selectin",
+            "foreign_keys": "Good.pantry_container_uuid",
+        }
+    )
+
+
+class Stocked(Base, table=True):
+    pantry_good_uuid: TABLE_ID = Field(foreign_key=f"{Good.__tablename__}.uuid")
+    good: Good = Relationship(
+        sa_relationship_kwargs={
+            "lazy": "selectin",
+            "foreign_keys": "Stocked.pantry_good_uuid",
+        }
+    )
+    at: datetime
     count: int
+    expires: datetime
 
 
-class Consumed(Table, Related(StockedGood), table=True):
+class Consumed(Base, table=True):
+    pantry_good_uuid: TABLE_ID = Field(foreign_key=f"{Good.__tablename__}.uuid")
+    good: Good = Relationship(
+        sa_relationship_kwargs={
+            "lazy": "selectin",
+            "foreign_keys": "Consumed.pantry_good_uuid",
+        }
+    )
     at: datetime
     amount: float
     unit: pantry.UnitContainer

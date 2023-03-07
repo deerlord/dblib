@@ -11,10 +11,10 @@ from sqlmodel import SQLModel
 from sqlmodel.sql.expression import SelectOfScalar
 
 from . import models
-from .models._base import Table
+from .models._base import Base
 from .settings import Settings
 
-T = TypeVar("T", bound=Table)
+T = TypeVar("T", bound=Base)
 
 settings = Settings()
 

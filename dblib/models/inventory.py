@@ -1,9 +1,9 @@
 from sqlmodel import Field
 
 from ..enums import inventory
-from ._base import Table
+from ._base import Base
 
 
-class Item(Table, table=True):
+class Item(Base, table=True):
     name: str
     type: inventory.ItemType = Field(index=True)
