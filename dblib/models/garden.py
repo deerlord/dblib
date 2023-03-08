@@ -39,7 +39,7 @@ class Plant(Base, table=True):
         foreign_key=f"{GrowthSchedule.__tablename__}.uuid"
     )
     growth_schedule: GrowthSchedule = Relationship(
-        sa_relationship_args={
+        sa_relationship_kwargs={
             "lazy": "selectin",
             "foreign_keys": "Plant.garden_growthschedule_uuid",
         }
@@ -50,7 +50,7 @@ class Plant(Base, table=True):
     watering_schedule: WateringSchedule = Relationship(
         sa_relationship_kwargs={
             "lazy": "selectin",
-            "foreign_keys": "Plant.garden_wateringschedule_uuid"
+            "foreign_keys": "Plant.garden_wateringschedule_uuid",
         }
     )
 
