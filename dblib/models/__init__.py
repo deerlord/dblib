@@ -1,1 +1,9 @@
-from . import compost, garden, inventory, location, pantry, weather  # noqa: F401
+from . import (  # noqa: F401
+    compost,
+    garden,
+    inventory,
+    location,
+    pantry,
+    sensor,
+    weather,
+)

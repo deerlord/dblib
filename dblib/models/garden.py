@@ -3,10 +3,11 @@ from datetime import datetime, timedelta
 from sqlmodel import Field, Relationship, UniqueConstraint
 
 from ..enums import garden
-from ._base import TABLE_ID, Base
+from ._base import TABLE_ID, Base, Table
 from .compost import NPKData
 from .inventory import Item
 from .location import Polygon
+from .sensor import Sensor
 
 
 class WateringSchedule(Base, table=True):
@@ -77,6 +78,13 @@ class IrrigationGrid(Base, table=True):
     count: int
 
 
+class SensorLinkTable(Table, table=True):
+    sensor_sensor_uuid: TABLE_ID = Field(
+        primary_key=True, foreign_key="sensor_sensor.uuid"
+    )
+    garden_bed_uuid: TABLE_ID = Field(primary_key=True, foreign_key="garden_bed.uuid")
+
+
 class Bed(Base, table=True):
     location_polygon_uuid: TABLE_ID = Field(foreign_key=f"{Polygon.__tablename__}.uuid")
     coords: Polygon = Relationship(
@@ -93,6 +101,10 @@ class Bed(Base, table=True):
             "lazy": "selectin",
             "foreign_keys": "Bed.garden_irrigationgrid_uuid",
         }
+    )
+    sensors: list[Sensor] = Relationship(
+        link_model=SensorLinkTable,
+        sa_relationship_kwargs={"lazy": "selectin"},
     )
     width: float
     length: float

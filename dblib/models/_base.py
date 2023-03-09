@@ -1,10 +1,9 @@
 from datetime import datetime
-from typing import Type, TypeAlias, TypeVar
+from typing import TypeAlias, TypeVar
 from uuid import UUID, uuid4
 
-from pydantic import create_model
 from sqlalchemy.orm import declared_attr
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field, SQLModel
 
 TABLE_ID: TypeAlias = UUID
 T = TypeVar("T", bound="Table")

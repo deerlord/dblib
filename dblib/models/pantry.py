@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlmodel import Field, Relationship
 
-from ..enums import imperial, pantry
+from ..enums import imperial
 from ._base import TABLE_ID, Base
 from .inventory import Item
 
@@ -41,7 +41,7 @@ class Stocked(Base, table=True):
         }
     )
     at: datetime
-    count: int
+    amount: float
     expires: datetime
 
 
@@ -55,4 +55,3 @@ class Consumed(Base, table=True):
     )
     at: datetime
     amount: float
-    unit: pantry.UnitContainer
