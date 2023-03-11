@@ -2,18 +2,19 @@ from datetime import datetime
 
 from sqlmodel import Field, Relationship
 
-from ..enums import imperial
-from ._base import TABLE_ID, Base
+from ..enums import imperial, pantry
+from ._base import TABLE_ID, Base, Table
 from .inventory import Item
 
 
 class Container(Base, table=True):
-    name: str
+    type: pantry.ContainerType
     units: imperial.Volume
     size: float
 
 
 class Good(Base, table=True):
+    brand: str
     inventory_item_uuid: TABLE_ID = Field(foreign_key=f"{Item.__tablename__}.uuid")
     item: Item = Relationship(
         sa_relationship_kwargs={
@@ -54,4 +55,4 @@ class Consumed(Base, table=True):
         }
     )
     at: datetime
-    amount: float
+    amount: datetime

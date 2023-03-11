@@ -1,7 +1,9 @@
 from enum import Enum, IntEnum
 
 
-class Model(IntEnum):
+# adafruit product number
+# https://www.adafruit.com/product/XXXX
+class AdafruitModelNumber(IntEnum):
     soil_sensor = 4026
 
 
