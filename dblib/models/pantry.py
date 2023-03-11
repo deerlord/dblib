@@ -55,4 +55,4 @@ class Consumed(Base, table=True):
         }
     )
     at: datetime
-    amount: datetime
+    amount: float
