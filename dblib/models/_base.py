@@ -34,7 +34,7 @@ class Base(Table):
 
 
 def ForeignKey(model: Type[Table], **kwargs) -> Field:
-    field = Field(foreign_key=f"{model.__tablename__}.uuid", **kwargs)
+    field = Field(foreign_key=f"{model.__tablename__}.uuid", index=True, **kwargs)
     return field
 
 
