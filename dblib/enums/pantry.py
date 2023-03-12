@@ -6,6 +6,7 @@ class Action(str, Enum):
     opened = "opened"
     expired = "expired"
     consumed = "consumed"
+    removed = "removed"
 
 
 class Brand(str, Enum):

@@ -41,4 +41,6 @@ class GoodFact(Base, table=True):
     consumed: list[ActionFact] = Related(ActionFact, link=LinkTable, auto=False)
     pantry_expired_uuid: TABLE_ID | None = ForeignKey(ActionFact, default=None)
     expired: ActionFact = Related(ActionFact, fieldname="pantry_expired_uuid")
+    pantry_removed_uuid: ActionFact | None = ForeignKey(ActionFact, default=None)
+    removed: ActionFact = Related(ActionFact, fieldname="pantry_removed_uuid")
     expiration_date: datetime | None = None
