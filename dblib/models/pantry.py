@@ -15,7 +15,7 @@ class ContainerDimension(Base, table=True):
 
 class ActionFact(Base, table=True):
     action: pantry.Action
-    amount: float
+    percent: float
     volume: imperial.Volume
     at: datetime
 
