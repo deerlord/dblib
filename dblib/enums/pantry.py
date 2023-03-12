@@ -1,6 +1,13 @@
 from enum import Enum
 
 
+class Action(str, Enum):
+    stocked = "stocked"
+    opened = "opened"
+    expired = "expired"
+    consumed = "consumed"
+
+
 class Brand(str, Enum):
     heb = "heb"
     target = "target"
