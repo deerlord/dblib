@@ -20,6 +20,7 @@ class GoodFact(Base, table=True):
 
 class ActionFact(Base, table=True):
     pantry_goodfact_uuid: TABLE_ID = ForeignKey(GoodFact)
+    good: GoodFact = Related(GoodFact)
     action: pantry.Action
     amount: float
     units: imperial.Volume
