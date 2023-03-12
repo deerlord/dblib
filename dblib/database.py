@@ -49,8 +49,9 @@ async def connection() -> AsyncGenerator[SESSION, None]:
         try:
             yield local
             await local.commit()
-        except IntegrityError:
+        except IntegrityError as error:
             await local.rollback()
+            raise error
 
 
 async def get_all(statement: SelectOfScalar[T]) -> AsyncGenerator[T, None]:  # type: ignore

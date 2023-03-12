@@ -6,13 +6,7 @@ class Action(str, Enum):
     opened = "opened"
     expired = "expired"
     consumed = "consumed"
-    removed = "removed"
-
-
-class Brand(str, Enum):
-    heb = "heb"
-    target = "target"
-    imperial = "imperial"
+    thrownout = "thrown out"
 
 
 class ContainerType(str, Enum):

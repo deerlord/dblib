@@ -33,22 +33,6 @@ class Base(Table):
         return f"{module.lower()}_{name}"
 
 
-def ForeignKey(model: Type[Table], **kwargs) -> Field:
+def ForeignKey(model: Type[Table], **kwargs):
     field = Field(foreign_key=f"{model.__tablename__}.uuid", index=True, **kwargs)
     return field
-
-
-def Related(
-    model: Type[Table],
-    fieldname: str | None = None,
-    link: Type[Table] | None = None,
-    auto: bool = True,
-) -> Relationship:
-    kwargs = {}
-    sa_kwargs = {"lazy": "selectin"}
-    if fieldname is None and auto:
-        sa_kwargs.update({"foreign_keys": f"{model.__tablename__}_uuid"})
-    if link:
-        kwargs.update({"link_model": link})
-    relationship = Relationship(sa_relationship_kwargs=sa_kwargs, **kwargs)
-    return relationship
