@@ -1,9 +1,9 @@
 from datetime import datetime
-from typing import TypeAlias, TypeVar
+from typing import Type, TypeAlias, TypeVar
 from uuid import UUID, uuid4
 
 from sqlalchemy.orm import declared_attr
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
 
 TABLE_ID: TypeAlias = UUID
 T = TypeVar("T", bound="Table")
@@ -31,3 +31,17 @@ class Base(Table):
         *_, module = cls.__module__.split(".")
         name = cls.__name__.lower()
         return f"{module.lower()}_{name}"
+
+
+def ForeignKey(model: Type[Table]) -> Field:
+    field = Field(foreign_key=f"{model.__tablename__}.uuid")
+    return field
+
+
+def Related(model: Type[Table], fieldname: str | None = None) -> Relationship:
+    if fieldname is None:
+        fieldname = f"{model.__tablename__}_uuid"
+    relationship = Relationship(
+        sa_relationship_kwargs={"lazy": "selectin", "foreign_keys": fieldname}
+    )
+    return relationship

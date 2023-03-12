@@ -1,6 +1,7 @@
 from enum import Enum
 
 
-class ItemType(str, Enum):
-    plant = "plant"
-    foodstuff = "foodstuff"
+class Action(str, Enum):
+    stocked = "stocked"
+    consumed = "consumed"
+    dispoed = "disposed"
